@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">F5_DAVIES_GARCIA-LAMOUREUX_MinecraftServerViewer</string>
+    <string name="title_activity_main">MainActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="update">Update</string>
+    <string name="save">Save</string>
+
+    <string name="title_list">Saved Servers</string>
+    <string name="adding_server">Adding a server. Arg: %1$s</string>
+</resources>
