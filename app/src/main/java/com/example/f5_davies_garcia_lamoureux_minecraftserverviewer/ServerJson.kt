@@ -1,28 +1,34 @@
 package com.example.f5_davies_garcia_lamoureux_minecraftserverviewer
+import kotlinx.serialization.Serializable
 
-class ServerJson {
+@Serializable
+data class ServerJson (
+    val version: Version,
+    var players: Players,
+    var description: Description,
+    var favicon: String
+)
 
-    inner class StatusResponse {
-        val description: String? = null
-        val players: Players? = null
-        val version: Version? = null
-        val favicon: String? = null
-        var time = 0
-    }
+@Serializable
+data class Version (
+    var name: String,
+    var protocol: String
+)
 
-    inner class Players {
-        val max = 0
-        val online = 0
-        val sample: List<Player>? = null
-    }
+@Serializable
+data class Players (
+    var max: Int = 0,
+    var online: Int = 0,
+    var sample: List<Player>? = null
+)
 
-    inner class Player {
-        val name: String? = null
-        val id: String? = null
-    }
+@Serializable
+data class Player (
+    var name: String,
+    var id: String
+)
 
-    inner class Version {
-        val name: String? = null
-        val protocol: String? = null
-    }
-}
+@Serializable
+data class Description (
+    var text: String
+)

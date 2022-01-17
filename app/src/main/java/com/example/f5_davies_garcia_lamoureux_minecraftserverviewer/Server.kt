@@ -1,118 +1,155 @@
 package com.example.f5_davies_garcia_lamoureux_minecraftserverviewer
-
-import com.google.gson.Gson
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.decodeFromString
 import java.io.*
-import java.lang.RuntimeException
-import java.net.InetSocketAddress
+import java.net.InetAddress
 import java.net.Socket
+import java.nio.charset.Charset
 
-class Server {
-    private val name = String
-    private val address = String
-    private val port = "25565"
-    private val host : InetSocketAddress? = null
-    private var timeout = 7000
+fun ByteArray.toHexString(): String {
+    val hexChars = "0123456789abcdef".toCharArray()
+    val hex = CharArray(2 * this.size)
+    this.forEachIndexed { i, byte ->
+        val unsigned = 0xff and byte.toInt()
+        hex[2 * i] = hexChars[unsigned / 16]
+        hex[2 * i + 1] = hexChars[unsigned % 16]
+    }
 
-    private val status = String
-    private val version = String
-    private val maxPlayers = Int
-    private val onlinePlayers = Int
-    private val motd = String
+    return hex.joinToString("")
+}
+
+fun String.toHex(): ByteArray { //Transform the HexString into a ByteArray
+    check(length % 2 == 0) { "Must have an even length" }
+
+    return chunked(2)
+        .map { it.toInt(16).toByte() }
+        .toByteArray()
+}
+
+class Server (
+    _commonName: String,
+    _hostName: String? = null,
+    _ip: String? = null,
+    _port: Int = 25565)
+
+{
+    private var commonName = _commonName
+    private var hostName = _hostName
+    private var ip: InetAddress
+    private var ip_str: String
+    private var port = _port
+    private lateinit var sock: Socket
+    private val inputStrm: InputStream = sock.getInputStream()
+    private val outputStrm: OutputStream = sock.getOutputStream()
+
+    init {
+        if (! _hostName.isNullOrBlank())
+        {
+            hostName = _hostName
+            ip = InetAddress.getByName(hostName)
+        }
+        else
+        {
+            if (! _ip.isNullOrBlank())
+                ip = InetAddress.getByName(_ip)
+            else
+                throw Exception("Ni IP ni hostname.")
+        }
+
+        this.sock = Socket(this.ip,this.port)
+        this.ip_str = ip.toString().substring(1)
+
+    }
+
+
+
     // TODO Add connected players on server detail/info. private val players = Player[]
     // TODO If masochist retriever the favicon of server. private val favicon = String  //wiki.vg/Server_List_ping
 
-    private val gson: Gson = Gson()
-
-
-    @Throws(IOException::class)
-    fun readVarInt(input: DataInputStream): Int {
-        var i = 0; var j = 0
-        while (true) {
-            val k: Int = input.readByte()
-            i = i or (k and 0x7F shl j++ * 7)
-            if (j > 5) throw RuntimeException("VarInt too big")
-            if (k and 0x80 != 128) break
+//val : read only
+//var : mutable
+    private fun writeVarInt(value: Int) : ByteArray {
+    var tempVal: Int = value
+    val b = ByteArrayOutputStream()
+    val res = DataOutputStream(b)
+    val hex7f: Int = 0x7F
+    val hexInv7f: Int = hex7f.inv()
+    while (true) {
+        if (tempVal.and(hexInv7f) == 0x00) {
+            res.write(tempVal)
+            return b.toByteArray()
+        }
+        res.write(tempVal.and(hex7f).or(0x80))
+        tempVal = tempVal.ushr(7)
+    }
+}
+    private fun readVarInt(dataIn: DataInputStream): Int {
+        var i: Int = 0
+        var j: Int = 0
+        var k: Int = 0
+        loop@ while (true) {
+            k = dataIn.readByte().toInt()
+            i = i.or(k.and(0x7F).shl(j++ * 7))
+            //if j> 5 throw exception
+            if (k.and(0x80) != 128)
+                break@loop
         }
         return i
     }
 
-    @Throws(IOException::class)
-    fun writeVarInt(out: DataOutputStream, paramInt: Int) {
-        var paramInt = paramInt
-        while (true) {
-            if (paramInt and -0x80 == 0) {
-                out.writeByte(paramInt)
-                return
-            }
-            out.writeByte(paramInt and 0x7F or 0x80)
-            paramInt = paramInt ushr 7
-        }
+    fun closeSocket() { this.sock.close() }
+
+    fun statusSocket(): String {
+        val status: String
+        if (sock.isBound)
+            status = "Bound"
+        else if (sock.isClosed)
+            status = "Closed"
+        else
+            status = "Connected"
+        return "$status | ${sock.localAddress}:${sock.localPort} | ${sock.inetAddress}:${sock.port}"
     }
 
-    @Throws(IOException::class)
-    fun fetchData(): StatusResponse {
-        val socket = Socket()
-        val outputStream: OutputStream
-        val dataOutputStream: DataOutputStream
-        val inputStream: InputStream
-        val inputStreamReader: InputStreamReader
-        socket.setSoTimeout(timeout)
-        socket.connect(host, timeout)
-        outputStream = socket.getOutputStream()
-        dataOutputStream = DataOutputStream(outputStream)
-        inputStream = socket.getInputStream()
-        inputStreamReader = InputStreamReader(inputStream)
+    private fun handshake(): ByteArray{
         val b = ByteArrayOutputStream()
         val handshake = DataOutputStream(b)
-        handshake.writeByte(0x00) //packet id for handshake
-        writeVarInt(handshake, 4) //protocol version
-        writeVarInt(handshake, host.getHostString().length()) //host length
-        handshake.writeBytes(host.getHostString()) //host string
-        handshake.writeShort(host.getPort()) //port
-        writeVarInt(handshake, 1) //state (1 for handshake)
-        writeVarInt(dataOutputStream, b.size()) //prepend size
-        dataOutputStream.write(b.toByteArray()) //write handshake packet
-        dataOutputStream.writeByte(0x01) //size is only 1
-        dataOutputStream.writeByte(0x00) //packet id for ping
-        val dataInputStream = DataInputStream(inputStream)
-        val size = readVarInt(dataInputStream) //size of packet
-        var id = readVarInt(dataInputStream) //packet id
-        if (id == -1) {
-            throw IOException("Premature end of stream.")
-        }
-        if (id != 0x00) { //we want a status response
-            throw IOException("Invalid packetID")
-        }
-        val length = readVarInt(dataInputStream) //length of json string
-        if (length == -1) {
-            throw IOException("Premature end of stream.")
-        }
-        if (length == 0) {
-            throw IOException("Invalid string length.")
-        }
-        val input = ByteArray(length)
-        dataInputStream.readFully(input) //read json string
-        val json = String(input)
-        val now = System.currentTimeMillis()
-        dataOutputStream.writeByte(0x09) //size of packet
-        dataOutputStream.writeByte(0x01) //0x01 for ping
-        dataOutputStream.writeLong(now) //time!?
-        readVarInt(dataInputStream)
-        id = readVarInt(dataInputStream)
-        if (id == -1) {
-            throw IOException("Premature end of stream.")
-        }
-        if (id != 0x01) {
-            throw IOException("Invalid packetID")
-        }
-        val pingtime: Long = dataInputStream.readLong() //read response
-        val response: StatusResponse = gson.fromJson(json, ServerJson::class)
-        response.time = (now - pingtime).toInt()
-        dataOutputStream.close()
-        outputStream.close()
-        inputStreamReader.close()
-        inputStream.close()
-        socket.close()
-        return response
+        val charset: Charset = Charsets.UTF_8
+        val hostnameBa: ByteArray = ip_str.toByteArray(charset)
+
+        handshake.writeByte(0x00) //handshake packet ID
+        handshake.write("FFFFFFFF0F".toHex()) //-1 var int as per convention for ping
+        handshake.writeByte(hostnameBa.size) //Length of hostname
+        handshake.write(hostnameBa) //Same IP or hostname as used to connect the socket
+        handshake.writeShort(port)
+        handshake.writeByte(0x01) //Status (1) and not login (2)
+
+        handshake.close()
+        return b.toByteArray()
+    }
+
+    private fun statusPaquet(): ByteArray {
+        val paquet = ByteArrayOutputStream()
+        val handshake = handshake()
+        paquet.write(writeVarInt(handshake.size))
+        paquet.write(handshake)
+
+        //ping
+        paquet.write(0x01)
+        paquet.write(0x00)
+        return paquet.toByteArray()
+    }
+
+    fun getServerInfo(): ServerJson {
+        val statusPaquet = statusPaquet()
+        val dataOut: DataOutputStream = DataOutputStream(outputStrm)
+        dataOut.write(statusPaquet)
+        dataOut.flush()
+
+        val dataIn: DataInputStream = DataInputStream(inputStrm)
+        readVarInt(dataIn) // Reads VarInt of the packet - Unused //uses up the stream bytes :)
+        dataIn.readByte() // packet ID - Unused
+        val bArray = ByteArray(readVarInt(dataIn))
+        dataIn.read(bArray)
+        return Json.decodeFromString(bArray.decodeToString())
     }
 }
