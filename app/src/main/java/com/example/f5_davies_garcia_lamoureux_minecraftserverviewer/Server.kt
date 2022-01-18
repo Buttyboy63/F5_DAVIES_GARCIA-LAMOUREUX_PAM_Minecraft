@@ -1,10 +1,18 @@
 package com.example.f5_davies_garcia_lamoureux_minecraftserverviewer
+import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.decodeFromString
 import java.io.*
 import java.net.InetAddress
 import java.net.Socket
 import java.nio.charset.Charset
+import android.net.DnsResolver
+import android.net.DnsResolver.Callback
+import android.net.DnsResolver.FLAG_EMPTY
+
+
 
 fun ByteArray.toHexString(): String {
     val hexChars = "0123456789abcdef".toCharArray()
@@ -26,27 +34,39 @@ fun String.toHex(): ByteArray { //Transform the HexString into a ByteArray
         .toByteArray()
 }
 
+@RequiresApi(Build.VERSION_CODES.Q)
 class Server (
+    _context: Context,
     _commonName: String,
     _hostName: String? = null,
     _ip: String? = null,
-    _port: Int = 25565)
+    _port: Int? = null)
 
 {
     private var commonName = _commonName
     private var hostName = _hostName
     private var ip: InetAddress
     private var ip_str: String
-    private var port = _port
-    private lateinit var sock: Socket
-    private val inputStrm: InputStream = sock.getInputStream()
-    private val outputStrm: OutputStream = sock.getOutputStream()
+    private var port = 25565
+    private var sock: Socket? = null
+    private var inputStrm: InputStream? = null
+    private var outputStrm: OutputStream? = null
 
     init {
+        // todo DNS SRV REQUEST
+
         if (! _hostName.isNullOrBlank())
         {
             hostName = _hostName
-            ip = InetAddress.getByName(hostName)
+            //Try SRV request
+            val srvHostName: String = "_minecraft._tcp."+hostName
+            val dnsR: DnsResolver = DnsResolver.getInstance()
+            //https://developer.android.com/reference/kotlin/android/net/DnsResolver#query_1
+            // SRV number : 33
+            dnsR.query(null, srvHostName, 33, FLAG_EMPTY, _context.mainExecutor, Callback)
+            //
+            //Else basic DNS A request
+            ip = InetAddress.getByName(hostName) //DNS A request
         }
         else
         {
@@ -56,7 +76,16 @@ class Server (
                 throw Exception("Ni IP ni hostname.")
         }
 
-        this.sock = Socket(this.ip,this.port)
+
+        try {
+            this.sock = Socket(this.ip,this.port)
+            this.inputStrm = sock?.getInputStream()
+            this.outputStrm = sock?.getOutputStream()
+
+        } catch (e: IOException ) {
+            println("Connection failed")
+        }
+
         this.ip_str = ip.toString().substring(1)
 
     }
@@ -97,17 +126,19 @@ class Server (
         return i
     }
 
-    fun closeSocket() { this.sock.close() }
+    fun closeSocket() {
+        this.sock?.close()
+    }
 
     fun statusSocket(): String {
         val status: String
-        if (sock.isBound)
+        if (sock?.isBound == true)
             status = "Bound"
-        else if (sock.isClosed)
+        else if (sock?.isClosed == true)
             status = "Closed"
         else
             status = "Connected"
-        return "$status | ${sock.localAddress}:${sock.localPort} | ${sock.inetAddress}:${sock.port}"
+        return "$status | ${sock?.localAddress}:${sock?.localPort} | ${sock?.inetAddress}:${sock?.port}"
     }
 
     private fun handshake(): ByteArray{
