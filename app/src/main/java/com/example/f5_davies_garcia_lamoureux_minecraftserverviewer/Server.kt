@@ -1,16 +1,18 @@
 package com.example.f5_davies_garcia_lamoureux_minecraftserverviewer
-import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.decodeFromString
+import org.minidns.dnsmessage.DnsMessage.RESPONSE_CODE
+import org.minidns.hla.ResolverApi
+import org.minidns.hla.SrvResolverResult
+import org.minidns.hla.SrvResolverResult.ResolvedSrvRecord
+import org.minidns.record.InternetAddressRR
 import java.io.*
 import java.net.InetAddress
 import java.net.Socket
 import java.nio.charset.Charset
-import android.net.DnsResolver
-import android.net.DnsResolver.Callback
-import android.net.DnsResolver.FLAG_EMPTY
+
 
 
 
@@ -36,7 +38,6 @@ fun String.toHex(): ByteArray { //Transform the HexString into a ByteArray
 
 @RequiresApi(Build.VERSION_CODES.Q)
 class Server (
-    _context: Context,
     _commonName: String,
     _hostName: String? = null,
     _ip: String? = null,
@@ -45,28 +46,26 @@ class Server (
 {
     private var commonName = _commonName
     private var hostName = _hostName
-    private var ip: InetAddress
-    private var ip_str: String
+    private var ip: InetAddress = InetAddress.getLocalHost() // initialise ip
+    private var ipStr: String
     private var port = 25565
     private var sock: Socket? = null
     private var inputStrm: InputStream? = null
     private var outputStrm: OutputStream? = null
 
     init {
-        // todo DNS SRV REQUEST
+        //port
+        if (_port != null) {
+            port = _port
+        }
 
         if (! _hostName.isNullOrBlank())
         {
             hostName = _hostName
-            //Try SRV request
-            val srvHostName: String = "_minecraft._tcp."+hostName
-            val dnsR: DnsResolver = DnsResolver.getInstance()
-            //https://developer.android.com/reference/kotlin/android/net/DnsResolver#query_1
-            // SRV number : 33
-            dnsR.query(null, srvHostName, 33, FLAG_EMPTY, _context.mainExecutor, Callback)
-            //
-            //Else basic DNS A request
-            ip = InetAddress.getByName(hostName) //DNS A request
+            if ( resolveSRV(hostName!!) == 0 ) {
+                // SRV failed -> basic DNS A request
+                ip = InetAddress.getByName(hostName) //DNS A request
+            }
         }
         else
         {
@@ -75,7 +74,7 @@ class Server (
             else
                 throw Exception("Ni IP ni hostname.")
         }
-
+        this.ipStr = ip.toString().substring(1)
 
         try {
             this.sock = Socket(this.ip,this.port)
@@ -85,12 +84,7 @@ class Server (
         } catch (e: IOException ) {
             println("Connection failed")
         }
-
-        this.ip_str = ip.toString().substring(1)
-
     }
-
-
 
     // TODO Add connected players on server detail/info. private val players = Player[]
     // TODO If masochist retriever the favicon of server. private val favicon = String  //wiki.vg/Server_List_ping
@@ -115,7 +109,7 @@ class Server (
     private fun readVarInt(dataIn: DataInputStream): Int {
         var i: Int = 0
         var j: Int = 0
-        var k: Int = 0
+        var k: Int
         loop@ while (true) {
             k = dataIn.readByte().toInt()
             i = i.or(k.and(0x7F).shl(j++ * 7))
@@ -124,6 +118,29 @@ class Server (
                 break@loop
         }
         return i
+    }
+
+    private fun resolveSRV(domainName: String): Int { //Returns 1 if success, 0 otherwise
+        var status: Int = 0;
+        //result = DnssecResolverApi.INSTANCE.resolveSrv(SrvType.xmpp_client, "example.org");
+        val result: SrvResolverResult = ResolverApi.INSTANCE.resolveSrv("_minecraft._tcp.$domainName");
+
+        if (result.wasSuccessful()) {
+            val srvRecords = result.sortedSrvResolvedAddresses
+            if (srvRecords.size > 0) {
+                val srvRecord = srvRecords[0]
+                val inetAddressRR = srvRecord.addresses[0]
+
+                this.port = srvRecord.port
+                this.ip = inetAddressRR.inetAddress
+                status = 1
+            }
+        }
+        else {
+            val responseCode = result.responseCode
+            // Perform error handling.
+        }
+        return status
     }
 
     fun closeSocket() {
@@ -145,7 +162,7 @@ class Server (
         val b = ByteArrayOutputStream()
         val handshake = DataOutputStream(b)
         val charset: Charset = Charsets.UTF_8
-        val hostnameBa: ByteArray = ip_str.toByteArray(charset)
+        val hostnameBa: ByteArray = ipStr.toByteArray(charset)
 
         handshake.writeByte(0x00) //handshake packet ID
         handshake.write("FFFFFFFF0F".toHex()) //-1 var int as per convention for ping

@@ -46,7 +46,7 @@ class FirstFragment : Fragment() {
         override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
             // Get element from your dataset at this position and replace the
             // contents of the view with that element
-            viewHolder.textView.text = dataSet[position]
+            viewHolder.textView.text = dataSet[position].toString()
 
         }
 
@@ -61,7 +61,7 @@ class FirstFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
 
@@ -73,11 +73,10 @@ class FirstFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        dataSet.add("Je") ; dataSet.add("sais") ; dataSet.add("pas") ; dataSet.add("ce")
-        dataSet.add("que") ; dataSet.add("je") ; dataSet.add("fais.")
+
         val recyclerview = view.findViewById<RecyclerView>(R.id.recyclerView)
         recyclerview.layoutManager = LinearLayoutManager(view.context)
-        val adapter = CustomAdapter(dataSet.toArray(arrayOfNulls<String>(dataSet.size)))
+        val adapter = CustomAdapter(dataSet.toArray(arrayOfNulls<ServerCell>(dataSet.size)))
         recyclerview.adapter = adapter
 
         adapter.
