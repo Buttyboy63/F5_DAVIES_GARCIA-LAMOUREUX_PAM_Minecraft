@@ -7,13 +7,43 @@
     tools:context=".SecondFragment">
 
     <TextView
-        android:id="@+id/textview_second"
+        android:id="@+id/textview_creation_server_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/button_second"
+        android:layout_marginBottom="16dp"
+        android:text="@string/creation_server_name"
+        app:layout_constraintBottom_toTopOf="@+id/textInput_server_name_field"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textInput_server_name_field" />
+
+    <TextView
+        android:id="@+id/textview_creation_hostname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/creation_hostname"
+        app:layout_constraintBottom_toTopOf="@+id/textInput_hostname_field"
+        app:layout_constraintStart_toStartOf="@+id/textInput_hostname_field" />
+
+    <TextView
+        android:id="@+id/textview_creation_ipv4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/creation_ipv4"
+        app:layout_constraintBottom_toTopOf="@+id/textInput_ipv4_field"
+        app:layout_constraintEnd_toStartOf="@+id/textview_creation_port"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textInput_ipv4_field" />
+
+    <TextView
+        android:id="@+id/textview_creation_port"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/creation_port"
+        app:layout_constraintBottom_toTopOf="@+id/textInput_port_field"
+        app:layout_constraintStart_toStartOf="@+id/textInput_port_field" />
 
     <Button
         android:id="@+id/button_second"
@@ -22,6 +52,52 @@
         android:text="@string/save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_second" />
+        app:layout_constraintTop_toBottomOf="@+id/textInput_hostname_field" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/textInput_server_name_field"
+        android:layout_width="375dp"
+        android:layout_height="48dp"
+        android:hint="@string/creation_server_name_field"
+        app:layout_constraintBottom_toTopOf="@+id/textInput_hostname_field"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.444"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/textInput_hostname_field"
+        android:layout_width="379dp"
+        android:layout_height="48dp"
+        android:hint="@string/creation_hostname_field"
+        android:textColorHint="#757575"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/textInput_ipv4_field"
+        android:layout_width="168dp"
+        android:layout_height="48dp"
+        android:hint="@string/creation_ipv4_field"
+        android:textColorHint="#757575"
+        app:layout_constraintBottom_toTopOf="@+id/textInput_hostname_field"
+        app:layout_constraintEnd_toStartOf="@+id/textInput_port_field"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInput_server_name_field" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/textInput_port_field"
+        android:layout_width="70dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:hint="@string/creation_port_field"
+        android:textColorHint="#757575"
+        app:layout_constraintBottom_toTopOf="@+id/textInput_hostname_field"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textInput_ipv4_field"
+        app:layout_constraintTop_toBottomOf="@+id/textInput_server_name_field" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,7 +1,8 @@
 package com.example.f5_davies_garcia_lamoureux_minecraftserverviewer
 
-class ServerCell ( _name: String, _status : Int, serverJson: ServerJson? = null) {
-    enum class Status {ONLINE, UNKNOWN, OFFLINE}
+class ServerCell ( serverData: ServerData ) {
+    /*
+    enum class Status {OFFLINE, ONLINE, UNKNOWN}
 
     private var status = Status.UNKNOWN
     private var name = _name
@@ -22,6 +23,14 @@ class ServerCell ( _name: String, _status : Int, serverJson: ServerJson? = null)
             version = serverJson.version.name
         }
     }
+
+     */
+
+    private var status = serverData.status
+    private var name = serverData.common_name
+    private var current_players = serverData.current_players
+    private var max_players = serverData.max_players
+    private var version = serverData.version
 
     override fun toString(): String {
         return "$name $current_players/$max_players\t$version";

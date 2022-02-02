@@ -36,7 +36,7 @@ fun String.toHex(): ByteArray { //Transform the HexString into a ByteArray
         .toByteArray()
 }
 
-@RequiresApi(Build.VERSION_CODES.Q)
+//@RequiresApi(Build.VERSION_CODES.Q)
 class Server (
     _commonName: String,
     _hostName: String? = null,
@@ -100,8 +100,8 @@ class Server (
     // TODO Add connected players on server detail/info. private val players = Player[]
     // TODO If masochist retrieve the favicon of server. private val favicon = String  //wiki.vg/Server_List_ping
 
-//val : read only
-//var : mutable
+    //val : read only
+    //var : mutable
     private fun writeVarInt(value: Int) : ByteArray {
     var tempVal: Int = value
     val b = ByteArrayOutputStream()
@@ -210,5 +210,11 @@ class Server (
         val bArray = ByteArray(readVarInt(dataIn))
         dataIn.read(bArray)
         return Json.decodeFromString(bArray.decodeToString())
+    }
+
+    fun export(): ServerData {
+        val srvJson = this.getServerInfo()
+        // TODO : Returns an "UNKNOWN" status (2) for now. Needs to differentiate cases like "online", "offline", and adapts parameters.
+        return ServerData(ipStr, port, hostName, commonName, 2 , srvJson.players.online, srvJson.players.max, srvJson.version.name)
     }
 }

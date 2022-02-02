@@ -18,6 +18,8 @@ class FirstFragment : Fragment() {
 
     private var _binding: FragmentFirstBinding? = null
 
+    val serversDAO : ServerDao = ServersDatabase.getInstance(requireContext()).serverDao()
+    // TODO : Create dataSet from serversDAO.getAll() (which is a List<ServerData>).
     private val dataSet = ArrayList<ServerCell>()
 
     class CustomAdapter(private val dataSet: Array<ServerCell>) :

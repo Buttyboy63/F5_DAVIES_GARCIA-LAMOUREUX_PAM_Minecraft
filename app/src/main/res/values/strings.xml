@@ -9,4 +9,12 @@
 
     <string name="title_list">Saved Servers</string>
     <string name="adding_server">Adding a server. Arg: %1$s</string>
+    <string name="creation_server_name">Server name</string>
+    <string name="creation_hostname_field">minecraft.example.com</string>
+    <string name="creation_port">Port</string>
+    <string name="creation_ipv4">IPv4</string>
+    <string name="creation_hostname">Hostname</string>
+    <string name="creation_server_name_field">MyServer</string>
+    <string name="creation_ipv4_field">127.0.0.1</string>
+    <string name="creation_port_field">25535</string>
 </resources>
