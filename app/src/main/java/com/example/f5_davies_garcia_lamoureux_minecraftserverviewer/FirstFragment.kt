@@ -65,10 +65,7 @@ class FirstFragment : Fragment() {
 
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
 
-
-
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -78,8 +75,6 @@ class FirstFragment : Fragment() {
         recyclerview.layoutManager = LinearLayoutManager(view.context)
         val adapter = CustomAdapter(dataSet.toArray(arrayOfNulls<ServerCell>(dataSet.size)))
         recyclerview.adapter = adapter
-
-        adapter.
 
         binding.buttonFirst.setOnClickListener {}
 

@@ -55,16 +55,27 @@ class Server (
 
     init {
         //port
-        if (_port != null) {
+        if (_port != null) { //assign non default port
             port = _port
         }
 
         if (! _hostName.isNullOrBlank())
         {
             hostName = _hostName
-            if ( resolveSRV(hostName!!) == 0 ) {
-                // SRV failed -> basic DNS A request
+            val result: SrvResolverResult = ResolverApi.INSTANCE.resolveSrv("_minecraft._tcp.$hostName")
+            if (! result.wasSuccessful()) { // SRV failed -> basic DNS A request
                 ip = InetAddress.getByName(hostName) //DNS A request
+            }
+            else {
+                val srvRecords = result.sortedSrvResolvedAddresses
+                for (srvRecord in srvRecords) {
+                    // Loop over the Internet Address RRs resolved for the SRV RR. The order of
+                    // the list depends on the preferred IP version setting of MiniDNS.
+                    port = srvRecord.port
+                    for (inetAddressRR in srvRecord.addresses) {
+                        ip = inetAddressRR.inetAddress
+                    }
+                }
             }
         }
         else
@@ -87,7 +98,7 @@ class Server (
     }
 
     // TODO Add connected players on server detail/info. private val players = Player[]
-    // TODO If masochist retriever the favicon of server. private val favicon = String  //wiki.vg/Server_List_ping
+    // TODO If masochist retrieve the favicon of server. private val favicon = String  //wiki.vg/Server_List_ping
 
 //val : read only
 //var : mutable
