@@ -1,11 +1,14 @@
 package com.example.f5_davies_garcia_lamoureux_minecraftserverviewer
 
+import android.database.sqlite.SQLiteConstraintException
 import android.os.Bundle
+import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.databinding.FragmentSecondBinding
@@ -53,11 +56,24 @@ class SecondFragment : Fragment() {
                     binding.textInputHostnameField.text.toString(),
                     binding.textInputIpv4Field.text.toString(),
                     binding.textInputPortField.text.toString())
-                serversDAO.insertOne(serv.export())
+                try {
+                    serversDAO.insertOne(serv.export())
+                }
+                catch (e: SQLiteConstraintException)
+                {
+                    activity?.runOnUiThread {
+                        Toast.makeText(context, "Le serveur existe déjà !", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
             }
+
+            findNavController().popBackStack()
         }
 
-
+        // todo inputtypes on fragment xml
+        // todo update button actions
+        // todo better graphics
     }
 
     override fun onDestroyView() {
