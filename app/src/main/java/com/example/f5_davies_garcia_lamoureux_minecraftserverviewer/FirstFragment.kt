@@ -75,13 +75,17 @@ class FirstFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val serversDAO : ServerDao = ServersDatabase.getInstance(requireContext()).serverDao()
 
         val recyclerview = view.findViewById<RecyclerView>(R.id.recyclerView)
         recyclerview.layoutManager = LinearLayoutManager(view.context)
         val adapter = CustomAdapter(dataSet.toArray(arrayOfNulls<ServerData>(dataSet.size)))
         recyclerview.adapter = adapter
 
-        binding.buttonFirst.setOnClickListener {}
+        binding.buttonFirst.setOnClickListener {
+            //todo re run LSP requests
+            runBlocking(Dispatchers.Default) { dataSet = ArrayList(serversDAO.getAll()) }
+        }
 
         binding.fab.setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
