@@ -10,6 +10,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.databinding.FragmentFirstBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -20,9 +22,9 @@ class FirstFragment : Fragment() {
 
 
 
-    private var dataSet = ArrayList<ServerCell>()
+    private var dataSet = ArrayList<ServerData>()
 
-    class CustomAdapter(private val dataSet: Array<ServerCell>) :
+    class CustomAdapter(private val dataSet: Array<ServerData>) :
         RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
         /**
          * Provide a reference to the type of views that you are using
@@ -67,8 +69,7 @@ class FirstFragment : Fragment() {
 
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
         val serversDAO : ServerDao = ServersDatabase.getInstance(requireContext()).serverDao()
-        // TODO : Create dataSet from serversDAO.getAll() (which is a List<ServerData>).
-
+        runBlocking(Dispatchers.Default) { dataSet = ArrayList(serversDAO.getAll()) }
         return binding.root
     }
 
@@ -77,7 +78,7 @@ class FirstFragment : Fragment() {
 
         val recyclerview = view.findViewById<RecyclerView>(R.id.recyclerView)
         recyclerview.layoutManager = LinearLayoutManager(view.context)
-        val adapter = CustomAdapter(dataSet.toArray(arrayOfNulls<ServerCell>(dataSet.size)))
+        val adapter = CustomAdapter(dataSet.toArray(arrayOfNulls<ServerData>(dataSet.size)))
         recyclerview.adapter = adapter
 
         binding.buttonFirst.setOnClickListener {}

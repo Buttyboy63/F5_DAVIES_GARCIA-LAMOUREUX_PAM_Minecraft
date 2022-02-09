@@ -9,6 +9,9 @@ import android.widget.Button
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.databinding.FragmentSecondBinding
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 
 fun disableButton(button: Button) {
     button.isEnabled = false
@@ -43,12 +46,18 @@ class SecondFragment : Fragment() {
 
         binding.buttonSecond.setOnClickListener {
             disableButton(binding.buttonSecond)
-            val serv = Server(binding.textInputServerNameField.text.toString(),
-                binding.textInputHostnameField.text.toString(),
-                binding.textInputIpv4Field.text.toString(),
-                binding.textInputPortField.text.toString())
-            serversDAO.insertAll(serv.export())
+
+            runBlocking (Dispatchers.Default) {
+                val serv = Server(
+                    binding.textInputServerNameField.text.toString(),
+                    binding.textInputHostnameField.text.toString(),
+                    binding.textInputIpv4Field.text.toString(),
+                    binding.textInputPortField.text.toString())
+                serversDAO.insertOne(serv.export())
+            }
         }
+
+
     }
 
     override fun onDestroyView() {

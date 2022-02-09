@@ -39,8 +39,13 @@ data class ServerData(
     val status: Int,
     val current_players: Int?,
     val max_players: Int?,
-    val version: String
+    val version: String?
 )
+{
+    override fun toString(): String {
+        return "$common_name $current_players/$max_players\t$version\t$ip:$port";
+    }
+}
 
 @Dao
 interface ServerDao {
@@ -59,6 +64,9 @@ interface ServerDao {
 
     @Insert
     fun insertAll(vararg servers: ServerData)
+
+    @Insert
+    fun insertOne(server: ServerData)
 
     @Update
     fun updateServers(vararg servers: ServerData)

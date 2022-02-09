@@ -12,8 +12,9 @@ import java.io.*
 import java.net.InetAddress
 import java.net.Socket
 import java.nio.charset.Charset
-
-
+import kotlinx.coroutines.*
+import java.net.Inet4Address
+import kotlin.coroutines.CoroutineContext
 
 
 fun ByteArray.toHexString(): String {
@@ -46,7 +47,7 @@ class Server (
 {
     private var commonName = _commonName
     private var hostName = _hostName
-    private var ip: InetAddress = InetAddress.getLocalHost()// initialise ip
+    private var ip = Inet4Address.getLocalHost()// initialise ip
     private var ipStr: String
     private var port = 25565
     private var sock: Socket? = null
@@ -117,6 +118,7 @@ class Server (
         tempVal = tempVal.ushr(7)
     }
 }
+
     private fun readVarInt(dataIn: DataInputStream): Int {
         var i: Int = 0
         var j: Int = 0
@@ -198,7 +200,10 @@ class Server (
         return paquet.toByteArray()
     }
 
+    private val json = Json { ignoreUnknownKeys = true }
+
     fun getServerInfo(): ServerJson {
+
         val statusPaquet = statusPaquet()
         val dataOut: DataOutputStream = DataOutputStream(outputStrm)
         dataOut.write(statusPaquet)
@@ -209,12 +214,20 @@ class Server (
         dataIn.readByte() // packet ID - Unused
         val bArray = ByteArray(readVarInt(dataIn))
         dataIn.read(bArray)
-        return Json.decodeFromString(bArray.decodeToString())
+        println(bArray.decodeToString())
+        return json.decodeFromString(bArray.decodeToString())
     }
 
     fun export(): ServerData {
-        val srvJson = this.getServerInfo()
-        // TODO : Returns an "UNKNOWN" status (2) for now. Needs to differentiate cases like "online", "offline", and adapts parameters.
-        return ServerData(ipStr, port, hostName, commonName, 2 , srvJson.players.online, srvJson.players.max, srvJson.version.name)
+        val srvData : ServerData
+        if (sock == null) {
+            srvData = ServerData(ipStr, port, hostName, commonName, 0, null, null, null)
+        }
+        else {
+            val srvJson = this.getServerInfo()
+            // TODO : Returns an "UNKNOWN" status (2) for now. Needs to differentiate cases like "online", "offline", and adapts parameters.
+            srvData = ServerData(ipStr, port, hostName, commonName, 2 , srvJson.players.online, srvJson.players.max, srvJson.version.name)
+        }
+        return srvData;
     }
 }
