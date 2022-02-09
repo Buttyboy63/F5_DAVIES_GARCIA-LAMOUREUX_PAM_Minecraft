@@ -18,9 +18,9 @@ class FirstFragment : Fragment() {
 
     private var _binding: FragmentFirstBinding? = null
 
-    val serversDAO : ServerDao = ServersDatabase.getInstance(requireContext()).serverDao()
-    // TODO : Create dataSet from serversDAO.getAll() (which is a List<ServerData>).
-    private val dataSet = ArrayList<ServerCell>()
+
+
+    private var dataSet = ArrayList<ServerCell>()
 
     class CustomAdapter(private val dataSet: Array<ServerCell>) :
         RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
@@ -66,6 +66,8 @@ class FirstFragment : Fragment() {
     ): View {
 
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
+        val serversDAO : ServerDao = ServersDatabase.getInstance(requireContext()).serverDao()
+        // TODO : Create dataSet from serversDAO.getAll() (which is a List<ServerData>).
 
         return binding.root
     }

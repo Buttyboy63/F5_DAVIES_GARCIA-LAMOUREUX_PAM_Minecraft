@@ -41,12 +41,12 @@ class Server (
     _commonName: String,
     _hostName: String? = null,
     _ip: String? = null,
-    _port: Int? = null)
+    _port: String? = null)
 
 {
     private var commonName = _commonName
     private var hostName = _hostName
-    private var ip: InetAddress = InetAddress.getLocalHost() // initialise ip
+    private var ip: InetAddress = InetAddress.getLocalHost()// initialise ip
     private var ipStr: String
     private var port = 25565
     private var sock: Socket? = null
@@ -55,8 +55,8 @@ class Server (
 
     init {
         //port
-        if (_port != null) { //assign non default port
-            port = _port
+        if (! _port.isNullOrBlank()) { //assign non default port
+            port = _port.toInt()
         }
 
         if (! _hostName.isNullOrBlank())

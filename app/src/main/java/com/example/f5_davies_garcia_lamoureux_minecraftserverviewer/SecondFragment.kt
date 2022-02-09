@@ -46,7 +46,7 @@ class SecondFragment : Fragment() {
             val serv = Server(binding.textInputServerNameField.text.toString(),
                 binding.textInputHostnameField.text.toString(),
                 binding.textInputIpv4Field.text.toString(),
-                binding.textInputPortField.text.toString().toInt())
+                binding.textInputPortField.text.toString())
             serversDAO.insertAll(serv.export())
         }
     }
