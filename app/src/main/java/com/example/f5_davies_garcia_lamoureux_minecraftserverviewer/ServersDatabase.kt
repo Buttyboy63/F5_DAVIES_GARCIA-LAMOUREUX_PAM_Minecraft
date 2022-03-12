@@ -69,7 +69,7 @@ interface ServerDao {
     fun insertOne(server: ServerData)
 
     @Update
-    fun updateServers(vararg servers: ServerData)
+    fun updateServer(server: ServerData)
 
     @Delete
     fun delete(server: ServerData)

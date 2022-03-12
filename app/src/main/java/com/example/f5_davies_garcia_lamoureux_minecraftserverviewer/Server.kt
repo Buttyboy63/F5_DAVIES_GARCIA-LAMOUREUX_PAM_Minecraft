@@ -14,6 +14,7 @@ import java.net.Socket
 import java.nio.charset.Charset
 import kotlinx.coroutines.*
 import java.net.Inet4Address
+import java.net.UnknownHostException
 import kotlin.coroutines.CoroutineContext
 
 
@@ -47,53 +48,48 @@ class Server (
 {
     private var commonName = _commonName
     private var hostName = _hostName
-    private var ip = Inet4Address.getLocalHost()// initialise ip
-    private var ipStr: String
+    private var ip = Inet4Address.getByName("127.0.0.1")// initialise ip
+    private var ipStr: String = ""
     private var port = 25565
+    private var success = false
     private var sock: Socket? = null
     private var inputStrm: InputStream? = null
     private var outputStrm: OutputStream? = null
 
     init {
         //port
-        if (! _port.isNullOrBlank()) { //assign non default port
+        if (!_port.isNullOrBlank()) { //assign non default port
             port = _port.toInt()
         }
+        if (!_ip.isNullOrBlank()) {
+            ip = InetAddress.getByName(_ip)
+        }
 
-        if (! _hostName.isNullOrBlank())
-        {
-            hostName = _hostName
+        // DNS resolution can override IP selection.
+        if (!_hostName.isNullOrBlank()) {
             val result: SrvResolverResult = ResolverApi.INSTANCE.resolveSrv("_minecraft._tcp.$hostName")
-            if (! result.wasSuccessful()) { // SRV failed -> basic DNS A request
-                ip = InetAddress.getByName(hostName) //DNS A request
-            }
-            else {
-                val srvRecords = result.sortedSrvResolvedAddresses
-                for (srvRecord in srvRecords) {
-                    // Loop over the Internet Address RRs resolved for the SRV RR. The order of
-                    // the list depends on the preferred IP version setting of MiniDNS.
-                    port = srvRecord.port
-                    for (inetAddressRR in srvRecord.addresses) {
-                        ip = inetAddressRR.inetAddress
-                    }
+            if (!result.wasSuccessful()) { // SRV failed -> basic DNS A request
+                try {
+                    ip = InetAddress.getByName(hostName) //DNS A request
+                } catch (e : UnknownHostException) {
+                    println("DNS resolution failed.")
                 }
+            } else {
+                val srvRecords = result.sortedSrvResolvedAddresses
+                // The order of the list depends on the preferred IP version setting of MiniDNS.
+                port = srvRecords[0].port
+                ip = srvRecords[0].addresses[0].inetAddress
             }
         }
-        else
-        {
-            if (! _ip.isNullOrBlank())
-                ip = InetAddress.getByName(_ip)
-            else
-                throw Exception("Ni IP ni hostname.")
-        }
+
         this.ipStr = ip.toString().substring(1)
 
         try {
-            this.sock = Socket(this.ip,this.port)
+            this.sock = Socket(this.ip, this.port)
             this.inputStrm = sock?.getInputStream()
             this.outputStrm = sock?.getOutputStream()
-
-        } catch (e: IOException ) {
+            success = true
+        } catch (e: IOException) {
             println("Connection failed")
         }
     }
@@ -229,5 +225,9 @@ class Server (
             srvData = ServerData(ipStr, port, hostName, commonName, 2 , srvJson.players.online, srvJson.players.max, srvJson.version.name)
         }
         return srvData;
+    }
+
+    fun getSuccess(): Boolean {
+        return success;
     }
 }

@@ -56,6 +56,13 @@ class SecondFragment : Fragment() {
                     binding.textInputHostnameField.text.toString(),
                     binding.textInputIpv4Field.text.toString(),
                     binding.textInputPortField.text.toString())
+                if (!serv.getSuccess()) {
+                    activity?.runOnUiThread {
+                        Toast.makeText(context, "Connexion impossible!", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+                    //Insertion BDD
                 try {
                     serversDAO.insertOne(serv.export())
                 }
@@ -72,7 +79,6 @@ class SecondFragment : Fragment() {
         }
 
         // todo inputtypes on fragment xml
-        // todo update button actions
         // todo better graphics
     }
 

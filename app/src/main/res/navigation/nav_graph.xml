@@ -14,10 +14,26 @@
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />
+        <action
+            android:id="@+id/action_FirstFragment_to_deleteFragment"
+            app:destination="@id/deleteFragment" />
+        <action
+            android:id="@+id/action_FirstFragment_to_serverUpdatingFragment"
+            app:destination="@id/serverUpdatingFragment" />
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
         android:name="com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.SecondFragment"
         android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_second"/>
+    <fragment
+        android:id="@+id/deleteFragment"
+        android:name="com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.DeleteFragment"
+        android:label="fragment_delete"
+        tools:layout="@layout/fragment_delete" />
+    <fragment
+        android:id="@+id/serverUpdatingFragment"
+        android:name="com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.ServerUpdatingFragment"
+        android:label="fragment_server_updating"
+        tools:layout="@layout/fragment_server_updating" />
 </navigation>

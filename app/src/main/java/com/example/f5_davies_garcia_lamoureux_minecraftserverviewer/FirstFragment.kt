@@ -1,5 +1,6 @@
 package com.example.f5_davies_garcia_lamoureux_minecraftserverviewer
 
+import android.database.sqlite.SQLiteConstraintException
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -82,13 +83,17 @@ class FirstFragment : Fragment() {
         val adapter = CustomAdapter(dataSet.toArray(arrayOfNulls<ServerData>(dataSet.size)))
         recyclerview.adapter = adapter
 
-        binding.buttonFirst.setOnClickListener {
+        binding.buttonUpdate.setOnClickListener {
             //todo re run LSP requests
-            runBlocking(Dispatchers.Default) { dataSet = ArrayList(serversDAO.getAll()) }
+            findNavController().navigate(R.id.action_FirstFragment_to_serverUpdatingFragment)
         }
 
-        binding.fab.setOnClickListener {
+        binding.fabAdd.setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+        }
+
+        binding.fabDel.setOnClickListener {
+            findNavController().navigate(R.id.action_FirstFragment_to_deleteFragment)
         }
     }
 
