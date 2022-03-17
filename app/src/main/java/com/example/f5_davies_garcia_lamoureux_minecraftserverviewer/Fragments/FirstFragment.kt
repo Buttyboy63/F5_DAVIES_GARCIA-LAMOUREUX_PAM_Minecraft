@@ -1,6 +1,5 @@
-package com.example.f5_davies_garcia_lamoureux_minecraftserverviewer
+package com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Fragments
 
-import android.database.sqlite.SQLiteConstraintException
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,6 +9,10 @@ import android.widget.TextView
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.R
+import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.ServerDao
+import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.ServerData
+import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.ServersDatabase
 import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.databinding.FragmentFirstBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking

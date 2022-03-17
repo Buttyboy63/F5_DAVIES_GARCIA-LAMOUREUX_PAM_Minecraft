@@ -1,4 +1,4 @@
-package com.example.f5_davies_garcia_lamoureux_minecraftserverviewer
+package com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.databinding.FragmentSecondBinding
+import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Server
+import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.ServerDao
+import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.ServersDatabase
 import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.databinding.FragmentServerUpdatingBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking

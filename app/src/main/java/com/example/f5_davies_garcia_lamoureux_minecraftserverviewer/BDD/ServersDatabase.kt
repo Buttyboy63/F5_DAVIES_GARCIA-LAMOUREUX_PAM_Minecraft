@@ -35,7 +35,7 @@ data class ServerData(
     val ip: String,
     val port: Int,
     val hostname: String?,
-    val common_name: String,
+   val common_name: String,
     val status: Int,
     val current_players: Int?,
     val max_players: Int?,

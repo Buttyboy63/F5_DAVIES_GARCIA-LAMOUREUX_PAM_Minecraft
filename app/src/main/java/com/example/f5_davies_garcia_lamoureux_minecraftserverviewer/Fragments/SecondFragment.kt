@@ -1,8 +1,7 @@
-package com.example.f5_davies_garcia_lamoureux_minecraftserverviewer
+package com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Fragments
 
 import android.database.sqlite.SQLiteConstraintException
 import android.os.Bundle
-import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,8 +10,11 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
+import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.R
+import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Server
+import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.ServerDao
+import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.ServersDatabase
 import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.databinding.FragmentSecondBinding
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
@@ -51,6 +53,7 @@ class SecondFragment : Fragment() {
             disableButton(binding.buttonSecond)
 
             runBlocking (Dispatchers.Default) {
+            //viewModelScope.launch {
                 val serv = Server(
                     binding.textInputServerNameField.text.toString(),
                     binding.textInputHostnameField.text.toString(),
