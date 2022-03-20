@@ -7,25 +7,20 @@
 
     <fragment
         android:id="@+id/FirstFragment"
-        android:name="com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Fragments.FirstFragment"
+        android:name="com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Fragments.HomeFragment"
         android:label="@string/first_fragment_label"
         tools:layout="@layout/fragment_first">
 
-        <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
         <action
             android:id="@+id/action_FirstFragment_to_deleteFragment"
             app:destination="@id/deleteFragment" />
         <action
             android:id="@+id/action_FirstFragment_to_serverUpdatingFragment"
             app:destination="@id/serverUpdatingFragment" />
+        <action
+            android:id="@+id/action_FirstFragment_to_addServerFragment"
+            app:destination="@id/addServerFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Fragments.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second"/>
     <fragment
         android:id="@+id/deleteFragment"
         android:name="com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Fragments.DeleteFragment"
@@ -36,4 +31,9 @@
         android:name="com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Fragments.ServerUpdatingFragment"
         android:label="fragment_server_updating"
         tools:layout="@layout/fragment_server_updating" />
+    <fragment
+        android:id="@+id/addServerFragment"
+        android:name="com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Fragments.AddServerFragment"
+        android:label="fragment_add_server"
+        tools:layout="@layout/fragment_add_server" />
 </navigation>

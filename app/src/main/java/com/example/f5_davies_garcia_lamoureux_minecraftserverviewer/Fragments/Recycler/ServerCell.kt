@@ -1,6 +1,8 @@
-package com.example.f5_davies_garcia_lamoureux_minecraftserverviewer
+package com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Fragments.Recycler
 
-class ServerCell ( serverData: ServerData ) {
+import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Model.ServerData
+
+class ServerCell ( serverData: ServerData) {
     /*
     enum class Status {OFFLINE, ONLINE, UNKNOWN}
 

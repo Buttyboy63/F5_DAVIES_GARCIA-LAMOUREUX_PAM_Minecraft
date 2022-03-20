@@ -16,7 +16,11 @@
     <string name="creation_hostname">Hostname</string>
     <string name="creation_server_name_field">MyServer</string>
     <string name="creation_ipv4_field">127.0.0.1</string>
-    <string name="creation_port_field">25535</string>
+    <string name="creation_port_field">25565</string>
+
+    <string name="toast_server_added">Serveur ajouté!</string>
+    <string name="toast_server_exists">Le serveur éxiste déja!</string>
+    <string name="toast_connection_impossible">Connexion impossible!</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

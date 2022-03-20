@@ -1,0 +1,4 @@
+package com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Fragments
+
+class ServerDetailsFragment {
+}

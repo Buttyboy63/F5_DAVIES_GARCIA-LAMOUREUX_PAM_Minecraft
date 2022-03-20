@@ -1,6 +1,7 @@
 package com.example.f5_davies_garcia_lamoureux_minecraftserverviewer
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Model.ServerData
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.decodeFromString
 import org.minidns.dnsmessage.DnsMessage.RESPONSE_CODE
@@ -17,26 +18,6 @@ import java.net.Inet4Address
 import java.net.UnknownHostException
 import kotlin.coroutines.CoroutineContext
 
-
-fun ByteArray.toHexString(): String {
-    val hexChars = "0123456789abcdef".toCharArray()
-    val hex = CharArray(2 * this.size)
-    this.forEachIndexed { i, byte ->
-        val unsigned = 0xff and byte.toInt()
-        hex[2 * i] = hexChars[unsigned / 16]
-        hex[2 * i + 1] = hexChars[unsigned % 16]
-    }
-
-    return hex.joinToString("")
-}
-
-fun String.toHex(): ByteArray { //Transform the HexString into a ByteArray
-    check(length % 2 == 0) { "Must have an even length" }
-
-    return chunked(2)
-        .map { it.toInt(16).toByte() }
-        .toByteArray()
-}
 
 //@RequiresApi(Build.VERSION_CODES.Q)
 class Server (
@@ -201,11 +182,11 @@ class Server (
     fun getServerInfo(): ServerJson {
 
         val statusPaquet = statusPaquet()
-        val dataOut: DataOutputStream = DataOutputStream(outputStrm)
+        val dataOut = DataOutputStream(outputStrm)
         dataOut.write(statusPaquet)
         dataOut.flush()
 
-        val dataIn: DataInputStream = DataInputStream(inputStrm)
+        val dataIn = DataInputStream(inputStrm)
         readVarInt(dataIn) // Reads VarInt of the packet - Unused //uses up the stream bytes :)
         dataIn.readByte() // packet ID - Unused
         val bArray = ByteArray(readVarInt(dataIn))
@@ -230,4 +211,24 @@ class Server (
     fun getSuccess(): Boolean {
         return success;
     }
+}
+
+fun ByteArray.toHexString(): String {
+    val hexChars = "0123456789abcdef".toCharArray()
+    val hex = CharArray(2 * this.size)
+    this.forEachIndexed { i, byte ->
+        val unsigned = 0xff and byte.toInt()
+        hex[2 * i] = hexChars[unsigned / 16]
+        hex[2 * i + 1] = hexChars[unsigned % 16]
+    }
+
+    return hex.joinToString("")
+}
+
+fun String.toHex(): ByteArray { //Transform the HexString into a ByteArray
+    check(length % 2 == 0) { "Must have an even length" }
+
+    return chunked(2)
+        .map { it.toInt(16).toByte() }
+        .toByteArray()
 }

@@ -7,10 +7,9 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textViewServerCell"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/status_dot"
         android:drawablePadding="5dp"
         android:text="var_server_status" />
 
