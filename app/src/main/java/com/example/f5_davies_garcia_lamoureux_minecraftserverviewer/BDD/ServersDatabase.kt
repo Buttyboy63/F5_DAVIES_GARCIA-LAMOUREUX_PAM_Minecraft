@@ -1,8 +1,7 @@
-package com.example.f5_davies_garcia_lamoureux_minecraftserverviewer
+package com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.BDD
 
 import android.content.Context
 import androidx.room.*
-import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.BDD.ServerDao
 import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Model.ServerData
 
 @Database(entities = [ServerData::class], version = 1)

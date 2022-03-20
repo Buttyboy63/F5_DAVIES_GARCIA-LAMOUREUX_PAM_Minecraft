@@ -4,14 +4,11 @@ import android.app.Application
 import android.database.sqlite.SQLiteConstraintException
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.BDD.ServerDao
 import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Model.ServerData
-import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.R
 import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Server
-import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.ServersDatabase
-import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.ToastHelper
+import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.BDD.ServersDatabase
 import kotlinx.coroutines.*
 import java.lang.Exception
 
@@ -29,19 +26,19 @@ class ServerDataViewModel(application: Application) : AndroidViewModel(applicati
                 println("Test: connexion impossible")
                 runBlocking(Dispatchers.Main) {
                     //ViewModel n'as pas accès aux ressources locales, dommage....
-                    Toast.makeText(app, "Connexion impossible!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(app, "Could not connect", Toast.LENGTH_SHORT).show()
                 }
             }
             else {
                 runBlocking(Dispatchers.Main) {
                     //ToastHelper.printToastShort(app, R.string.toast_connection_impossible)
-                    Toast.makeText(app, "Serveur ajouté!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(app, "Server added!", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
-    private suspend fun insertServer(srvdata: ServerData){
+    private fun insertServer(srvdata: ServerData){
         println("function insert server")
         //Insertion BDD
         try {
@@ -50,11 +47,20 @@ class ServerDataViewModel(application: Application) : AndroidViewModel(applicati
         catch (e: SQLiteConstraintException) {
             println("ret: Server existe déja")
             runBlocking(Dispatchers.Main) {
-                Toast.makeText(app, "Le serveur éxiste déja!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(app, "Server already exists!", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
+    /*
+    //Tentative récupération arrayList co routine
+    fun getAllServers() : ArrayList<ServerData> {
+        var array : ArrayList<ServerData> = ArrayList()
+        viewModelScope.launch(Dispatchers.IO) {
+            array = ArrayList(database.getAll())
+        }
+        return array
+    }*/
     fun updateServers() {
         viewModelScope.launch(Dispatchers.IO) {
             val dataSet = ArrayList(database.getAll())
@@ -73,17 +79,9 @@ class ServerDataViewModel(application: Application) : AndroidViewModel(applicati
                 database.delete(server)
             } catch (e: Exception) {
                 runBlocking(Dispatchers.Main) {
-                    Toast.makeText(app, "Erreur suppression", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(app, "Deletion error", Toast.LENGTH_SHORT).show()
                 }
             }
         }
-    }
-
-    fun getServerByIP(ip: String, port: Int) : ServerData {
-        return database.findByIp(ip,port)
-    }
-
-    fun getServerByHostname(hostname: String) : List<ServerData> {
-        return database.findByHostname(hostname)
     }
 }

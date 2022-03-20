@@ -5,11 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.R
-import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.ToastHelper
 import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.ViewModel.ServerDataViewModel
 import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.databinding.FragmentAddServerBinding
 
@@ -48,9 +45,6 @@ class AddServerFragment : Fragment() {
 
             findNavController().popBackStack()
         }
-
-        // todo inputtypes on fragment xml
-        // todo better graphics
     }
 
     override fun onDestroyView() {

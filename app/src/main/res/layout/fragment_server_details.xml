@@ -7,8 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.ServerDetailsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <TextView
         android:id="@+id/server_name"
         android:layout_width="wrap_content"
@@ -30,7 +28,8 @@
         android:src="@android:drawable/ic_delete"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:contentDescription="@string/fragment_server_delete_button" />
 
     <TextView
         android:id="@+id/status"
@@ -48,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="TextView"
+        android:text=""
         app:layout_constraintStart_toEndOf="@+id/status"
         app:layout_constraintTop_toBottomOf="@+id/server_name" />
 
@@ -68,7 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="TextView"
+        android:text=""
         app:layout_constraintStart_toEndOf="@+id/players"
         app:layout_constraintTop_toBottomOf="@+id/status_val" />
 
@@ -88,7 +87,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="TextView"
+        android:text=""
         app:layout_constraintStart_toEndOf="@+id/version"
         app:layout_constraintTop_toBottomOf="@+id/players_val" />
 
@@ -108,7 +107,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="TextView"
+        android:text=""
         app:layout_constraintStart_toEndOf="@+id/hostname"
         app:layout_constraintTop_toBottomOf="@+id/version_val" />
 
@@ -128,7 +127,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="TextView"
+        android:text=""
         app:layout_constraintStart_toEndOf="@+id/ip_port"
         app:layout_constraintTop_toBottomOf="@+id/hostname_val" />
 

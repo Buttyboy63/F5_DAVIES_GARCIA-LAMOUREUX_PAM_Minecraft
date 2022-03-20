@@ -18,6 +18,6 @@ data class ServerData(
     ): Serializable
     {
         override fun toString(): String {
-            return "$common_name $status $current_players/$max_players\t$version\t$ip:$port";
+            return "$common_name $current_players/$max_players $version"
         }
     }

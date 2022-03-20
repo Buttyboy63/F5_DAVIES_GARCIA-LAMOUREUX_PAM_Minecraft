@@ -12,20 +12,13 @@
         tools:layout="@layout/fragment_first">
 
         <action
-            android:id="@+id/action_FirstFragment_to_serverUpdatingFragment"
-            app:destination="@id/serverUpdatingFragment" />
-        <action
             android:id="@+id/action_FirstFragment_to_addServerFragment"
             app:destination="@id/addServerFragment" />
         <action
             android:id="@+id/action_FirstFragment_to_serverDetailsFragment"
             app:destination="@id/serverDetailsFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/serverUpdatingFragment"
-        android:name="com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Fragments.ServerUpdatingFragment"
-        android:label="fragment_server_updating"
-        tools:layout="@layout/fragment_server_updating" />
+
     <fragment
         android:id="@+id/addServerFragment"
         android:name="com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Fragments.AddServerFragment"
@@ -34,6 +27,6 @@
     <fragment
         android:id="@+id/serverDetailsFragment"
         android:name="com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Fragments.ServerDetailsFragment"
-        android:label="fragment_server_details"
+        android:label="@string/fragment_server_details_label"
         tools:layout="@layout/fragment_server_details" />
 </navigation>

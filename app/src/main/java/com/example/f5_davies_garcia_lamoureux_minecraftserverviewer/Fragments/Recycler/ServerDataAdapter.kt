@@ -7,18 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.os.bundleOf
 import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Fragments.ServerUpdatingFragment
 import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Model.ServerData
 import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.R
 import java.util.ArrayList
 
 
-class ServerCellAdapter(l: ArrayList<ServerData>, val nav: NavController) : RecyclerView.Adapter<ServerCellAdapter.ViewHolder>() {
+class ServerDataAdapter(l: ArrayList<ServerData>, private val nav : NavController) : RecyclerView.Adapter<ServerDataAdapter.ViewHolder>() {
     private val dataSet: Array<ServerData> = l.toArray(arrayOfNulls<ServerData>(l.size))
     /**
      * Provide a reference to the type of views that you are using
@@ -26,10 +22,6 @@ class ServerCellAdapter(l: ArrayList<ServerData>, val nav: NavController) : Recy
      */
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.textViewServerCell)
-
-        init {
-            // Define click listener for the ViewHolder's View.
-        }
     }
 
     // Create new views (invoked by the layout manager)
@@ -45,8 +37,8 @@ class ServerCellAdapter(l: ArrayList<ServerData>, val nav: NavController) : Recy
         // Get element from your dataset at this position and replace the
 
 
-        viewHolder.textView.setOnClickListener() {
-            val bundle: Bundle = Bundle()
+        viewHolder.textView.setOnClickListener {
+            val bundle = Bundle()
             bundle.putSerializable("server",dataSet[position])
             nav.navigate(R.id.action_FirstFragment_to_serverDetailsFragment, bundle)
         }

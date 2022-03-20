@@ -1,25 +1,17 @@
 package com.example.f5_davies_garcia_lamoureux_minecraftserverviewer
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Model.ServerData
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.decodeFromString
-import org.minidns.dnsmessage.DnsMessage.RESPONSE_CODE
+import kotlinx.serialization.json.Json
 import org.minidns.hla.ResolverApi
 import org.minidns.hla.SrvResolverResult
-import org.minidns.hla.SrvResolverResult.ResolvedSrvRecord
-import org.minidns.record.InternetAddressRR
 import java.io.*
+import java.net.Inet4Address
 import java.net.InetAddress
 import java.net.Socket
-import java.nio.charset.Charset
-import kotlinx.coroutines.*
-import java.net.Inet4Address
 import java.net.UnknownHostException
-import kotlin.coroutines.CoroutineContext
+import java.nio.charset.Charset
 
 
-//@RequiresApi(Build.VERSION_CODES.Q)
 class Server (
     _commonName: String,
     _hostName: String? = null,
@@ -75,16 +67,13 @@ class Server (
         }
     }
 
-    // TODO Add connected players on server detail/info. private val players = Player[]
-    // TODO If masochist retrieve the favicon of server. private val favicon = String  //wiki.vg/Server_List_ping
-
     //val : read only
     //var : mutable
     private fun writeVarInt(value: Int) : ByteArray {
     var tempVal: Int = value
     val b = ByteArrayOutputStream()
     val res = DataOutputStream(b)
-    val hex7f: Int = 0x7F
+    val hex7f = 0x7F
     val hexInv7f: Int = hex7f.inv()
     while (true) {
         if (tempVal.and(hexInv7f) == 0x00) {
@@ -97,8 +86,8 @@ class Server (
 }
 
     private fun readVarInt(dataIn: DataInputStream): Int {
-        var i: Int = 0
-        var j: Int = 0
+        var i = 0
+        var j = 0
         var k: Int
         loop@ while (true) {
             k = dataIn.readByte().toInt()
@@ -110,43 +99,19 @@ class Server (
         return i
     }
 
-    private fun resolveSRV(domainName: String): Int { //Returns 1 if success, 0 otherwise
-        var status: Int = 0;
-        //result = DnssecResolverApi.INSTANCE.resolveSrv(SrvType.xmpp_client, "example.org");
-        val result: SrvResolverResult = ResolverApi.INSTANCE.resolveSrv("_minecraft._tcp.$domainName");
-
-        if (result.wasSuccessful()) {
-            val srvRecords = result.sortedSrvResolvedAddresses
-            if (srvRecords.size > 0) {
-                val srvRecord = srvRecords[0]
-                val inetAddressRR = srvRecord.addresses[0]
-
-                this.port = srvRecord.port
-                this.ip = inetAddressRR.inetAddress
-                status = 1
-            }
-        }
-        else {
-            val responseCode = result.responseCode
-            // Perform error handling.
-        }
-        return status
-    }
-
-    fun closeSocket() {
+    private fun closeSocket() {
         this.sock?.close()
     }
 
-    fun statusSocket(): String {
-        val status: String
-        if (sock?.isBound == true)
-            status = "Bound"
-        else if (sock?.isClosed == true)
-            status = "Closed"
-        else
-            status = "Connected"
+    //For debug purposes
+    /*fun statusSocket(): String {
+        val status: String = when {
+            sock?.isBound == true -> "Bound"
+            sock?.isClosed == true -> "Closed"
+            else -> "Connected"
+        }
         return "$status | ${sock?.localAddress}:${sock?.localPort} | ${sock?.inetAddress}:${sock?.port}"
-    }
+    }*/
 
     private fun handshake(): ByteArray{
         val b = ByteArrayOutputStream()
@@ -179,7 +144,7 @@ class Server (
 
     private val json = Json { ignoreUnknownKeys = true }
 
-    fun getServerInfo(): ServerJson {
+    private fun getServerInfo(): ServerJson {
 
         val statusPaquet = statusPaquet()
         val dataOut = DataOutputStream(outputStrm)
@@ -191,29 +156,28 @@ class Server (
         dataIn.readByte() // packet ID - Unused
         val bArray = ByteArray(readVarInt(dataIn))
         dataIn.read(bArray)
+        closeSocket()
         println(bArray.decodeToString())
         return json.decodeFromString(bArray.decodeToString())
     }
 
     fun export(): ServerData {
-        val srvData : ServerData
-        if (sock == null) {
-            srvData = ServerData(ipStr, port, hostName, commonName, 0, null, null, null)
-        }
-        else {
+        val srvData : ServerData = if (sock == null) {
+            ServerData(ipStr, port, hostName, commonName, 0, null, null, null)
+        } else {
             val srvJson = this.getServerInfo()
-            // TODO : Returns an "UNKNOWN" status (2) for now. Needs to differentiate cases like "online", "offline", and adapts parameters.
-            srvData = ServerData(ipStr, port, hostName, commonName, 2 , srvJson.players.online, srvJson.players.max, srvJson.version.name)
+            ServerData(ipStr, port, hostName, commonName, 2 , srvJson.players.online, srvJson.players.max, srvJson.version.name)
         }
-        return srvData;
+        return srvData
     }
 
     fun getSuccess(): Boolean {
-        return success;
+        return success
     }
 }
 
-fun ByteArray.toHexString(): String {
+//For debug purposes
+/*fun ByteArray.toHexString(): String {
     val hexChars = "0123456789abcdef".toCharArray()
     val hex = CharArray(2 * this.size)
     this.forEachIndexed { i, byte ->
@@ -223,7 +187,7 @@ fun ByteArray.toHexString(): String {
     }
 
     return hex.joinToString("")
-}
+}*/
 
 fun String.toHex(): ByteArray { //Transform the HexString into a ByteArray
     check(length % 2 == 0) { "Must have an even length" }

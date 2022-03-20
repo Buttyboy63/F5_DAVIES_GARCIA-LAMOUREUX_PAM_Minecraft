@@ -15,6 +15,7 @@
         <entry key="app/src/main/res/layout/fragment_first.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_second.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_server_details.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_server_updating.xml" value="0.1" />
         <entry key="app/src/main/res/layout/server_status_cell.xml" value="0.3148148148148148" />
       </map>
     </option>
