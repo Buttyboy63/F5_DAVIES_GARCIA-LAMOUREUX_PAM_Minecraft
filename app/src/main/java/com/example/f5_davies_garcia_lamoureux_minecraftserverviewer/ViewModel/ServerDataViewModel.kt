@@ -10,7 +10,7 @@ import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Model.Server
 import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Server
 import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.BDD.ServersDatabase
 import kotlinx.coroutines.*
-import java.lang.Exception
+import kotlin.Exception
 
 class ServerDataViewModel(application: Application) : AndroidViewModel(application) {
     private val app = getApplication<Application>()
@@ -20,21 +20,26 @@ class ServerDataViewModel(application: Application) : AndroidViewModel(applicati
         lateinit var server: Server
         viewModelScope.launch(Dispatchers.IO) {
             server = Server(srvName, hostname, ip, port)
-            insertServer(server.export())
+            try {
+                insertServer(server.export())
+                if(!server.getSuccess()) {
+                    println("Test: connexion impossible")
+                    runBlocking(Dispatchers.Main) {
+                        //ViewModel n'as pas accès aux ressources locales, dommage....
+                        Toast.makeText(app, "Could not connect", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                else {
+                    runBlocking(Dispatchers.Main) {
+                        Toast.makeText(app, "Server added!", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception){
+                runBlocking(Dispatchers.Main) {
+                    Toast.makeText(app, "Unknown error", Toast.LENGTH_SHORT).show()
+                }
+            }
 
-            if(!server.getSuccess()) {
-                println("Test: connexion impossible")
-                runBlocking(Dispatchers.Main) {
-                    //ViewModel n'as pas accès aux ressources locales, dommage....
-                    Toast.makeText(app, "Could not connect", Toast.LENGTH_SHORT).show()
-                }
-            }
-            else {
-                runBlocking(Dispatchers.Main) {
-                    //ToastHelper.printToastShort(app, R.string.toast_connection_impossible)
-                    Toast.makeText(app, "Server added!", Toast.LENGTH_SHORT).show()
-                }
-            }
         }
     }
 
