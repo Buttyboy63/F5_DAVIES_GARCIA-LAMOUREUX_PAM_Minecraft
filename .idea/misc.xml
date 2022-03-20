@@ -11,7 +11,7 @@
         <entry key="app/src/main/res/drawable/status_dot_red.xml" value="0.2095" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/fragment_add_server.xml" value="0.17325227963525835" />
+        <entry key="app/src/main/res/layout/fragment_add_server.xml" value="0.5" />
         <entry key="app/src/main/res/layout/fragment_first.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_second.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_server_details.xml" value="0.33" />

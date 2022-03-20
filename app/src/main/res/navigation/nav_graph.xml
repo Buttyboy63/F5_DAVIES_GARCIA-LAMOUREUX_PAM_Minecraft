@@ -22,7 +22,7 @@
     <fragment
         android:id="@+id/addServerFragment"
         android:name="com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Fragments.AddServerFragment"
-        android:label="fragment_add_server"
+        android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_add_server" />
     <fragment
         android:id="@+id/serverDetailsFragment"
