@@ -20,3 +20,6 @@ Sur la page principale il y a la liste des serveurs déja enregistré et leurs d
 Lors de l'ajout il est possible de ne pas préciser l'@IP et le port si vous avez un nom de domaine ayant un enregistrement [SRV](https://en.wikipedia.org/wiki/SRV_record).
 
 Le détail d'un serveur peut être visionné en cliquant sur celui-ci dans la liste. Depuis le détail il est possible de le supprimer.
+
+Limitations:
+De part notre implémentation du protocole SLP et la non-existance de documentation sur ce sujet, les serveurs Minecraft moddés ne sont pas pris en compte.
