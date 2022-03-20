@@ -2,10 +2,13 @@
     <string name="app_name">F5_DAVIES_GARCIA-LAMOUREUX_MinecraftServerViewer</string>
     <string name="title_activity_main">MainActivity</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
+    <string name="first_fragment_label">Minecraft Servers</string>
+    <string name="second_fragment_label">New server</string>
     <string name="update">Update</string>
     <string name="save">Save</string>
+    <string name="online">Online</string>
+    <string name="offline">Offline</string>
+    <string name="unknown">Unknown</string>
 
     <string name="title_list">Saved Servers</string>
     <string name="adding_server">Adding a server. Arg: %1$s</string>
@@ -21,6 +24,14 @@
     <string name="toast_server_added">Serveur ajouté!</string>
     <string name="toast_server_exists">Le serveur éxiste déja!</string>
     <string name="toast_connection_impossible">Connexion impossible!</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
+    <string name="details_status">Status:</string>
+    <string name="details_players">Players:</string>
+    <string name="details_version">Version:</string>
+    <string name="details_hostname">Hostname</string>
+    <string name="details_ip_port">IP/Port:</string>
+    <string name="details_delete">Delete?</string>
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

@@ -13,6 +13,7 @@ import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Server
 import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.ServersDatabase
 import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.ToastHelper
 import kotlinx.coroutines.*
+import java.lang.Exception
 
 class ServerDataViewModel(application: Application) : AndroidViewModel(application) {
     private val app = getApplication<Application>()
@@ -65,6 +66,19 @@ class ServerDataViewModel(application: Application) : AndroidViewModel(applicati
             }
         }
     }
+
+    fun deleteServer(server : ServerData) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                database.delete(server)
+            } catch (e: Exception) {
+                runBlocking(Dispatchers.Main) {
+                    Toast.makeText(app, "Erreur suppression", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
     fun getServerByIP(ip: String, port: Int) : ServerData {
         return database.findByIp(ip,port)
     }

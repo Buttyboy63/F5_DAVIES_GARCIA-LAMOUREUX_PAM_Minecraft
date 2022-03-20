@@ -49,8 +49,9 @@ class HomeFragment : Fragment() {
 
         val recyclerview = view.findViewById<RecyclerView>(R.id.recyclerView)
         recyclerview.layoutManager = LinearLayoutManager(view.context)
-        val adapter = ServerCellAdapter(dataSet)
+        val adapter = ServerCellAdapter(dataSet, findNavController())
         recyclerview.adapter = adapter
+
 
         binding.buttonUpdate.setOnClickListener {
             //todo re run LSP requests
@@ -59,10 +60,6 @@ class HomeFragment : Fragment() {
 
         binding.fabAdd.setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_addServerFragment)
-        }
-
-        binding.fabDel.setOnClickListener {
-            findNavController().navigate(R.id.action_FirstFragment_to_deleteFragment)
         }
     }
 

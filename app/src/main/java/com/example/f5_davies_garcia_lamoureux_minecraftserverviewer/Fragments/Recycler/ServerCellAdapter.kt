@@ -1,19 +1,24 @@
 package com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Fragments.Recycler
 
-import android.annotation.SuppressLint
-import android.graphics.drawable.Drawable
+
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.os.bundleOf
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Fragments.ServerUpdatingFragment
 import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.Model.ServerData
 import com.example.f5_davies_garcia_lamoureux_minecraftserverviewer.R
 import java.util.ArrayList
 
 
-class ServerCellAdapter(l: ArrayList<ServerData>) : RecyclerView.Adapter<ServerCellAdapter.ViewHolder>() {
+class ServerCellAdapter(l: ArrayList<ServerData>, val nav: NavController) : RecyclerView.Adapter<ServerCellAdapter.ViewHolder>() {
     private val dataSet: Array<ServerData> = l.toArray(arrayOfNulls<ServerData>(l.size))
     /**
      * Provide a reference to the type of views that you are using
@@ -38,6 +43,13 @@ class ServerCellAdapter(l: ArrayList<ServerData>) : RecyclerView.Adapter<ServerC
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         // Get element from your dataset at this position and replace the
+
+
+        viewHolder.textView.setOnClickListener() {
+            val bundle: Bundle = Bundle()
+            bundle.putSerializable("server",dataSet[position])
+            nav.navigate(R.id.action_FirstFragment_to_serverDetailsFragment, bundle)
+        }
         // contents of the view with that element
         var symbol = ResourcesCompat.getDrawable(viewHolder.itemView.context.resources, R.drawable.status_dot_orange, null)
         when(dataSet[position].status) {
